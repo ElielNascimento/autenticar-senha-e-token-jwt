@@ -1,0 +1,47 @@
+package br.com.elieldev.encriptarsenhausuario.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import br.com.elieldev.encriptarsenhausuario.model.UsuarioModel;
+import br.com.elieldev.encriptarsenhausuario.repository.UsuarioRepository;
+
+@Service
+public class UsuarioService {
+
+	@Autowired
+	public UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private PasswordEncoder encoder;
+
+	public List<UsuarioModel> listarTodos() {
+		return usuarioRepository.findAll();
+	}
+
+	public UsuarioModel criarUsuario(UsuarioModel user) {
+		return usuarioRepository.save(user);
+	}
+
+	public ResponseEntity<Boolean> validarSenha(UsuarioModel user) {
+
+		Optional<UsuarioModel> optUsuario = usuarioRepository.findById(user.getId());
+		if (optUsuario.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+		}
+
+		UsuarioModel usuario = optUsuario.get();
+		boolean valid = encoder.matches(user.getPassword(), usuario.getPassword());
+
+		HttpStatus status = (valid) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
+		return ResponseEntity.status(status).body(valid);
+
+	}
+
+}

@@ -1,0 +1,21 @@
+package br.com.elieldev.encriptarsenhausuario.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.com.elieldev.encriptarsenhausuario.model.UsuarioModel;
+import br.com.elieldev.encriptarsenhausuario.repository.UsuarioRepository;
+
+@Service
+public class UsuarioService {
+
+	@Autowired
+	public UsuarioRepository usarioRepository;
+
+	public List<UsuarioModel> listarTodos() {
+		return usarioRepository.findAll();
+	}
+
+}

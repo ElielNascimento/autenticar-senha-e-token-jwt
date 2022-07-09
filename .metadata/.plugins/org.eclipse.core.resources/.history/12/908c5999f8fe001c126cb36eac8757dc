@@ -1,0 +1,43 @@
+package br.com.elieldev.encriptarsenhausuario.controller;
+
+import java.net.URI;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import br.com.elieldev.encriptarsenhausuario.model.UsuarioModel;
+import br.com.elieldev.encriptarsenhausuario.service.UsuarioService;
+
+@RestController
+@RequestMapping(value = "/api/usuarios")
+public class UsuarioController {
+
+	@Autowired
+	private UsuarioService usuarioService;
+	@Autowired
+	private final PasswordEncoder encoder;
+
+	@GetMapping("/listarTodos")
+	public ResponseEntity<List<UsuarioModel>> listarTodos() {
+		List<UsuarioModel> response = usuarioService.listarTodos();
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping("/salvar")
+	public ResponseEntity<UsuarioModel> criarUsuario(@RequestBody UsuarioModel user) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{}id").buildAndExpand(user.getId())
+				.toUri();
+		UsuarioModel response = usuarioService.criarUsuario(user);
+		return ResponseEntity.created(uri).body(response);
+
+	}
+
+}
