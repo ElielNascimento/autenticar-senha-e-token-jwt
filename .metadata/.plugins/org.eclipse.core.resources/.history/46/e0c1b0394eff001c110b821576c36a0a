@@ -1,0 +1,18 @@
+package br.com.elieldev.autenticacao.jwt.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import br.com.elieldev.encriptarsenhausuario.service.DelahesUsuarioServiceImpl;
+
+public class JWTConfiguracao extends WebSecurityConfigurerAdapterc {
+	
+	
+	@Autowired
+	private final DelahesUsuarioServiceImpl usuarioService;
+	@Autowired
+	private final PasswordEncoder passwordEncoder;
+	
+
+}

@@ -1,0 +1,47 @@
+package br.com.elieldev.autenticacao.jwt.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import br.com.elieldev.encriptarsenhausuario.service.DelahesUsuarioServiceImpl;
+
+public class JWTConfiguracao {
+       
+	private final DelahesUsuarioServiceImpl usuarioService;
+
+	private final PasswordEncoder passwordEncoder;
+
+	public JWTConfiguracao(DelahesUsuarioServiceImpl usuarioService, PasswordEncoder passwordEncoder) {
+		this.usuarioService = usuarioService;
+		this.passwordEncoder = passwordEncoder;
+	}
+
+	 @Bean
+     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+         return authenticationConfiguration.getAuthenticationManager();
+     }
+	 
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeHttpRequests().antMatchers(HttpMethod.POST, "/login").permitAll().anyRequest()
+				.authenticated().and().addFilter(new JWTAutenticaFilter(authenticationManager(null)))
+				.addFilter(new JWTValidarFilter(authenticationManager(null))).sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	}
+
+	@Bean
+	CorsConfigurationSource corsconfiguration() {
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+		CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+		source.registerCorsConfiguration("/**", corsConfiguration);
+		return (CorsConfigurationSource) source;
+	}
+}

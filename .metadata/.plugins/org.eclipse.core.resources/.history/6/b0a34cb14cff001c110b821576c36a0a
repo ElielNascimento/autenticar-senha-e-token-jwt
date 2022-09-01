@@ -1,0 +1,39 @@
+package br.com.elieldev.autenticacao.jwt.security;
+
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+public class JWTValidarFilter extends BasicAuthenticationFilter {
+
+	public static final String HEADER_ATRIBUTO = "Authorization";
+	public static final String ATRIBUTO_PREFIXO = "Bearer ";
+	
+	
+	public JWTValidarFilter(AuthenticationManager authenticationManager) {
+		super(authenticationManager);
+	}
+	
+	
+	protected void doFilterIntenal(HttpServletRequest request, 
+			HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+		
+		String atributo = request.getHeader(ATRIBUTO_PREFIXO);
+		
+		if(atributo == null) {
+			chain.doFilter(request, response);
+			return ;
+		} if(!atributo.startsWith(ATRIBUTO_PREFIXO)) {
+			chain.doFilter(request, response);
+		}
+		
+	}
+	
+
+}

@@ -1,0 +1,26 @@
+package br.com.elieldev.autenticacao.jwt.security;
+
+import java.net.Authenticator;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+public class JWTAutenticaFilter extends UsernamePasswordAuthenticationFilter {
+
+	@Autowired
+	private final AuthenticationManager authenticationManager ;
+
+	public JWTAutenticaFilter(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
+
+	@Override
+    public Authenticator attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    	return super.attemptAuthentication(request, response);
+    }
+}

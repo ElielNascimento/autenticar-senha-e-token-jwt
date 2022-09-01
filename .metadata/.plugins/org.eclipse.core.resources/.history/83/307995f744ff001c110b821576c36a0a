@@ -1,0 +1,25 @@
+package br.com.elieldev.autenticacao.jwt.security;
+
+import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+public class JWTAutenticaFilter extends UsernamePasswordAuthenticationFilter {
+
+	private final AuthenticationManager authenticationManager;
+
+	public JWTAutenticaFilter(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
+
+	@Override
+	public Authentication  attemptAuthentication (HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException {
+		return super.attemptAuthentication(request, response);
+	}
+
+}
